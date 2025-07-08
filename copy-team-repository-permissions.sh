@@ -5,7 +5,7 @@ if [ $# -lt 3 ]; then
   echo "Usage: $0 <source_org> <target_org> <repository>"
   echo "Copies all team permissions for a repository from source to target organization"
   echo ""
-  echo "Example: $0 ncr-digital-banking candescent-digital-insight-testing my-repo"
+  echo "Example: $0 source-org target-org my-repo"
   exit 1
 fi
 
