@@ -73,7 +73,7 @@ while IFS= read -r repo_name || [[ -n "$repo_name" ]]; do
   
   # Check if repo exists in source org
   if GH_TOKEN=$GH_SOURCE_PAT gh api "repos/$source_org/$repo_name" --silent 2>/dev/null; then
-    "$script_dir/copy-team-repository-permissions.sh" "$source_org" "$target_org" "$repo_name"
+    "$script_dir/copy-team-permissions-single-repo.sh" "$source_org" "$target_org" "$repo_name"
   else
     echo "  WARNING: Repository '$repo_name' does not exist in source org. Skipping."
     ((skipped_repos++))

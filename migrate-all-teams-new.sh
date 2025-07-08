@@ -1,5 +1,5 @@
 #!/bin/bash
-# filepath: scripts\parent-organization-teams.sh
+# filepath: migrate-all-teams-new.sh
 
 if [ $# -lt 2 ]; then
   echo "Usage: $0 <source_org> <target_org>"
@@ -30,7 +30,7 @@ GH_TOKEN=$GH_SOURCE_PAT gh api "orgs/$source_org/teams" --paginate --jq '.[] | s
 while read -r team_slug; do
   echo "Processing root team: $team_slug"
   # Call the recursive script with empty parent parameters
-  "$script_dir/__copy_team_and_children_if_not_exists_at_target.sh" "$source_org" "$target_org" "$team_slug" "" ""
+  "$script_dir/_copy-team-recursive.sh" "$source_org" "$target_org" "$team_slug" "" ""
 done
 
 echo "Team migration complete!"

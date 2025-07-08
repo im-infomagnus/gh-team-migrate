@@ -1,5 +1,5 @@
 #!/bin/bash
-# filepath: scripts\copy-team-repository-permissions.sh
+# filepath: copy-team-permissions-single-repo.sh
 
 if [ $# -lt 3 ]; then
   echo "Usage: $0 <source_org> <target_org> <repository>"
@@ -45,7 +45,7 @@ while read -r team_json; do
   # Check if team exists at target before trying to add permissions
   if GH_TOKEN=$GH_PAT gh api "orgs/$target_org/teams/$team_slug" --silent 2>/dev/null; then
     # Add team to repository with same permission
-    "$script_dir/add-team-to-repository.sh" "$target_org" "$repository" "$team_slug" "$permission"
+    "$script_dir/_add-team-to-repo.sh" "$target_org" "$repository" "$team_slug" "$permission"
   else
     echo "    WARNING: Team '$team_slug' does not exist at target organization. Skipping."
   fi

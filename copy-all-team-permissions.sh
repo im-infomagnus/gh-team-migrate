@@ -1,5 +1,5 @@
 #!/bin/bash
-# filepath: scripts\copy-all-team-repository-permissions.sh
+# filepath: copy-all-team-permissions.sh
 
 if [ $# -lt 2 ]; then
   echo "Usage: $0 <source_org> <target_org>"
@@ -37,7 +37,7 @@ while read -r repo_name; do
   
   # Check if repo exists in source org
   if GH_TOKEN=$GH_SOURCE_PAT gh api "repos/$source_org/$repo_name" --silent 2>/dev/null; then
-    "$script_dir/copy-team-repository-permissions.sh" "$source_org" "$target_org" "$repo_name"
+    "$script_dir/copy-team-permissions-single-repo.sh" "$source_org" "$target_org" "$repo_name"
   else
     echo "  Repository '$repo_name' does not exist in source org. Skipping."
   fi

@@ -17,46 +17,51 @@ This document outlines the steps to migrate teams and their repository permissio
 #### 1. Migrate All Teams
 
 ```bash
-./parent-organization-teams.sh <source_org> <target_org>
+./migrate-all-teams.sh <source_org> <target_org>
 ```
 
 #### 2. Migrate All Team Repository Permissions
 
 ```bash
-./copy-all-team-repository-permissions.sh <source_org> <target_org>
+./copy-all-team-permissions.sh <source_org> <target_org>
 ```
 
-### Partial Migration (Specific Repos and Their Teams)
+### Partial Migration Example Workflow
 
-#### 1. Prepare Repository Lists
+This workflow is for migrating teams and permissions for a specific list of repositories.
 
-Create text files with repository names (one per line):
-- `repos-org-a.txt` - Repos going to Organization A
-- `repos-org-b.txt` - Repos going to Organization B
+#### 1. Get a List of Repositories
 
-Example `repos-org-a.txt`:
-```
-repo1
-repo2
-frontend-app
-```
-
-#### 2. Migrate Teams for Specific Repositories
+Create a list of subset of repos in the org manually, or generate a list of all repositories using ```get-repo-list.sh```.
 
 ```bash
-./migrate_teams_from_repo_list.sh <source_org> <target_org> <repo-list.txt>
+./get-repo-list.sh <source_org>
+```
+This will create a file named `all-repos-<source_org>.txt`.
+
+#### 2. Prepare Repository Lists
+
+Split the `all-repos-<source_org>.txt` file into smaller lists as needed. For example:
+- `repos-org-a.txt`
+- `repos-org-b.txt`
+
+#### 3. Migrate Teams for Specific Repositories
+
+Run the script for each repository list to migrate the associated teams.
+
+```bash
+./migrate-teams-from-repo-list.sh <source_org> <target_org> <repo-list.txt>
 ```
 
 Example:
 ```bash
-# For Organization A (500 repos)
-./migrate_teams_from_repo_list.sh source-org org-a repos-org-a.txt
-
-# For Organization B (700 repos)
-./migrate_teams_from_repo_list.sh source-org org-b repos-org-b.txt
+./migrate-teams-from-repo-list.sh source-org org-a repos-org-a.txt
+./migrate-teams-from-repo-list.sh source-org org-b repos-org-b.txt
 ```
 
-#### 3. Migrate Team Permissions for Specific Repositories
+#### 4. Migrate Team Permissions for Specific Repositories
+
+Finally, migrate the repository permissions for the teams you just migrated.
 
 ```bash
 ./copy-team-permissions-from-repo-list.sh <source_org> <target_org> <repo-list.txt>
@@ -64,16 +69,14 @@ Example:
 
 Example:
 ```bash
-# For Organization A
 ./copy-team-permissions-from-repo-list.sh source-org org-a repos-org-a.txt
-
-# For Organization B
 ./copy-team-permissions-from-repo-list.sh source-org org-b repos-org-b.txt
 ```
 
 ## Notes
 
-- The partial migration scripts will only migrate teams that have permissions on the specified repositories
-- Parent teams are automatically included to maintain team hierarchy
-- If a team already exists in the target org, it won't be recreated
-- Repository permissions are only set for teams that exist in the target org
+- The partial migration scripts will only migrate teams that have permissions on the specified repositories.
+- Parent teams are automatically included to maintain team hierarchy.
+- If a team already exists in the target org, it won't be recreated.
+- Repository permissions are only set for teams that exist in the target org.
+- Repository list files support comments (lines starting with #) and ignore empty lines.
